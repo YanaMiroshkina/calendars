@@ -586,6 +586,7 @@ export default {
 		flex-direction: row
 		justify-content: space-between
 		margin: 23px 5.5% 0
+		padding-right: 0
 			
 	&.birthdays &__subgrid:first-child
 		display: flex
