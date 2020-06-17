@@ -502,8 +502,10 @@ export default {
 		border-bottom-left-radius: 4px
 		border-bottom-right-radius: 4px
 		
-	&.flat &__option:not(:last-child)
-		border-bottom: 1px solid colorMedium
+	&.flat &__option
+		
+		&:not(:last-child)
+			border-bottom: 1px solid colorMedium
 		
 		&.active,
 		&:hover:not(.no-match):not(.disabled)

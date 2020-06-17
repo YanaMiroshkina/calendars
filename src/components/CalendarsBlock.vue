@@ -64,7 +64,6 @@
 								:bg="'#e0e2ea'" 
 								:items="timeItemsFrom"
 								:disabledItems="disabledTimeItemsFrom"
-								:allow="'numbers'"
 								class="calendars-block__time-item-select"
 								@select="onSelectTimeFrom"
 							/>
@@ -83,7 +82,6 @@
 								:bg="'#e0e2ea'"
 								:items="timeItemsTo"
 								:disabledItems="disabledTimeItemsTo"
-								:allow="'numbers'"
 								class="calendars-block__time-item-select"
 								@select="onSelectTimeTo"
 							/>
@@ -466,8 +464,8 @@ export default {
 .calendars-block
 	
 	&__title
-		margin-top: 5%
-		margin-bottom: 4%
+		margin-top: 50px
+		margin-bottom: 50px
 		font-family: 'Roboto-Light'
 		font-size: 40px
 		color: colorBlack
@@ -553,7 +551,7 @@ export default {
 		justify-content: space-between
 		margin-top: 30px
 		margin-bottom: 1.45%
-		padding: 0 4.5% 0 5.5%
+		padding: 0 4.5% 0 5.2%
 		
 		&-item
 			display: flex
@@ -594,7 +592,7 @@ export default {
 		padding: 0
 		width: auto
 		
-	&__subgrid:first-child &__calendar
+	&.birthdays &__subgrid:first-child &__calendar
 		min-height: auto
 			
 	&.birthdays &__subgrid:nth-child(2)
