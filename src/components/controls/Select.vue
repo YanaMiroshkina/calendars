@@ -86,19 +86,7 @@ export default {
 		items: {
 
 			type: Array,
-			default: () => ([
-
-				{
-					value: 0,
-					text: 'Отдел эксплуатации'					
-				},
-
-				{
-					value: 1,
-					text: 'Служба PR'					
-				},
-
-			])
+			default: () => ([])
 
 		},
 
