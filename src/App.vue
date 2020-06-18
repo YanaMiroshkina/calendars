@@ -4,7 +4,7 @@
 
 		<div v-if="showIEWarning" class="ie">
 			
-			<div class="ie__description">Корректная работа сайта гарантируется только в браузере Google Chrome.<br>Скачать его можно по ссылке: <a class="ie__link" href="https://www.google.com/chrome/" target="_blank" title="Скачать браузер Google Chrome">https://www.google.com/chrome/</a></div>
+			<div class="ie__description">Корректная работа сайта пока гарантируется только в браузере Google Chrome.<br>Скачать его можно по ссылке: <a class="ie__link" href="https://www.google.com/chrome/" target="_blank" title="Скачать браузер Google Chrome">https://www.google.com/chrome/</a></div>
 
 			<div 
 				class="ie__btn"

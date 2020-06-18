@@ -11,8 +11,8 @@
 			<input 
 				class="select__input" 
 				type="text" 
-				:disabled="!autocomplete"
 				:value="selectedText" 
+				:disabled="!autocomplete"
 				:placeholder="placeholder" 
 				@input="onInput"
 			/>
