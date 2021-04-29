@@ -634,7 +634,6 @@ export default {
 				font-size: 16px
 				line-height: 20px
 				color: white
-				text-transform: uppercase
 				white-space: nowrap
 				background-color: colorDark
 				border-radius: 4px
@@ -675,7 +674,6 @@ export default {
 				font-size: 16px
 				line-height: 24px
 				color: white
-				text-transform: uppercase
 				white-space: nowrap
 				
 				&:hover
