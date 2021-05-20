@@ -8,15 +8,15 @@ export default {
 			firstName: 'Александр',
 			lastName: 'Ткачёв',
 			photo: 'assets/img/man-avatar.jpg',
-			link: 'team-member/1',
+			link: 'user/1',
 
 		},
 
 		{
 			firstName: 'Ирина',
-			lastName: 'Кошкина',
+			lastName: 'Ефимова',
 			photo: 'assets/img/woman-avatar.jpg',
-			link: 'team-member/2',
+			link: 'user/2',
 
 		},
 
@@ -24,18 +24,18 @@ export default {
 			firstName: 'Константин',
 			lastName: 'Константинов',
 			photo: 'assets/img/man-avatar.jpg',
-			link: 'team-member/3',
+			link: 'user/3',
 
 		},
 
 		{
 			firstName: 'Алина',
-			lastName: 'Берёзкина',
+			lastName: 'Светлова',
 			photo: 'assets/img/woman-avatar.jpg',
-			link: 'team-member/4',
+			link: 'user/4',
 
 		},
 		
-	]
+	],
 
 }

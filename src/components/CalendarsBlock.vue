@@ -417,6 +417,11 @@ export default {
 
 	&__subgrid:nth-child(2) &__calendar:nth-child(2)
 		margin-top: 12%
+		
+	// календари сервисов
+		
+	&.services &__subgrid:nth-child(2)
+		margin-top: 15px
 
 	// календари дней рождений
 		

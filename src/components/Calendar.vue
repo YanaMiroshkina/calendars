@@ -202,6 +202,15 @@ export default {
 
 	data: () => ({
 
+		monthNames: [
+
+			'январь', 'февраль', 'март', 
+			'апрель', 'май', 'июнь', 
+			'июль', 'август', 'сентябрь', 
+			'октябрь', 'ноябрь', 'декабрь'
+
+		],
+
 		weekdays: ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'],
 
 		initialDay: new Date().getDate(),
@@ -248,17 +257,13 @@ export default {
 
 		monthName () {
 
-			let date = new Date(+this.params.year, +this.params.month - 1, 1),
-				month = date.toLocaleString('ru-ru', { month: 'long' })
-
-			return month
+			return this.monthNames[new Date(+this.params.year, +this.params.month - 1, 1).getMonth()]
 
 		},
 
 		firstDayPosition () {
 
-			let date = new Date(+this.params.year, +this.params.month - 1, 1),
-				weekday = date.toLocaleString('ru-ru', { weekday: 'short' }),
+			let weekday = this.weekdays[new Date(+this.params.year, +this.params.month - 1, 1).getDay()],
 				dayIndex = this.weekdays.indexOf(weekday)
 
 			return `${weekday}-${dayIndex}`
@@ -490,6 +495,7 @@ export default {
 		position: relative
 		font-family: 'Roboto-Light'
 		font-size: 16px
+		line-height: 1
 		color: colorBlack
 		cursor: default
 		
@@ -502,7 +508,7 @@ export default {
 			
 		&-number
 			position: relative
-			top: calc(50% - 12px)
+			top: calc(50% - 14px)
 			text-align: center  
 		
 	// большой календарь
@@ -522,7 +528,7 @@ export default {
 		font-size: 12px
 		
 	&.small &__day-number
-		top: calc(50% - 9px)
+		top: calc(50% - 8px)
 		
 	/* --- календарь сервисов --- */
 		
@@ -533,10 +539,10 @@ export default {
 			display: block
 			content: ''
 			position: absolute
-			top: 6px
-			left: 6px
-			width: calc(100% - 12px)
-			height: calc(100% - 12px)
+			top: 2px
+			left: 4px
+			width: calc(100% - 8px)
+			height: calc(100% - 8px)
 			border-radius: 4px
 			
 		&.with-number:not(.disabled):not(.active):hover:before
