@@ -1,9 +1,9 @@
 export default {
 
-  persons: state => {
+	persons: state => {
 
-    return state.persons
+		return state.persons
 
-  }
+	}
 
 }

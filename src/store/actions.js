@@ -1,9 +1,9 @@
 export default {
 
-  selectDate: ({state, getters, commit, dispatch}, options = {}) => {
+	selectDate: ({state, getters, commit, dispatch}, options = {}) => {
 
-    commit('changeSelectedDates', options.date)
+		commit('changeSelectedDates', options.date)
 
-  }
+	}
 
 }

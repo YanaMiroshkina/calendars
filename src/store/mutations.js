@@ -1,17 +1,17 @@
 export default {
 
-  setState: (state, options) => {
+	setState: (state, options) => {
 
-    state[options.name] = options.value
+		state[options.name] = options.value
 
-  },
+	},
 
-  changeSelectedDates: (state, selectedDate) => {
+	changeSelectedDates: (state, selectedDate) => {
 
-    if (state.selectedDates.find(d => d == selectedDate)) state.selectedDates = state.selectedDates.filter(d => d != selectedDate)
+		if (state.selectedDates.find(d => d == selectedDate)) state.selectedDates = state.selectedDates.filter(d => d != selectedDate)
 
-    else state.selectedDates.push(selectedDate)
+		else state.selectedDates.push(selectedDate)
 
-  },
+	},
 
 }
