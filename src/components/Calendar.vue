@@ -2,7 +2,7 @@
 	
 	<div :class="className">
 
-		<div class="calendar__month-name">{{ monthName }}</div>
+		<div class="calendar__month-name">{{ monthName[0].toUpperCase() + monthName.slice(1) }}</div>
 
 		<div class="calendar__table">
 
@@ -15,7 +15,7 @@
 			<div class="calendar__days">
 
 				<div 
-					v-for="week in 5"
+					v-for="week in 6"
 					:key="'week-' + week"
 					ref="week"
 					class="calendar__week"
@@ -31,7 +31,8 @@
 						class="calendar__day"
 						:class="{
 							'with-number': day,
-							'disabled': checkIfDayDisabled(daysNumbers[week][i - 1])
+							'disabled': checkIfDayDisabled(daysNumbers[week][i - 1]),
+							'active': checkIfDaySelected(day)
 						}"
 						@click="(e) => onClickDay(e, daysNumbers[week][i - 1])"
 					>
@@ -166,6 +167,7 @@
 
 <script>
 
+import { mapState, mapActions } from 'vuex'
 import selectors from '@/mixins/selectors'
 	
 export default {
@@ -192,11 +194,11 @@ export default {
 
 			})
 
-		}		
+		}   
 
 	},
 
-	mixins: [selectors],
+	mixins: [ selectors ],
 
 	data: () => ({
 
@@ -209,6 +211,12 @@ export default {
 	}),
 
 	computed: {
+
+		...mapState({
+
+			selectedDates: 'selectedDates'
+
+		}),
 
 		isPageBirthdays () {
 
@@ -268,7 +276,7 @@ export default {
 			let obj = {},
 				dayNumber = ''
 
-			for ( let week = 1; week <= 5; week++ ) {
+			for ( let week = 1; week <= 6; week++ ) {
 
 				for ( let day = 1; day <= 7; day++ ) {
 
@@ -303,13 +311,13 @@ export default {
 
 		hintTop () {
 
-			return this.params.isMain ? 50 : 15
+			return this.params.isMain ? 28 : 8
 
 		},
 
 		hintLeft () {
 
-			return this.params.isMain ? 47 : 15
+			return this.params.isMain ? 28 : 8
 
 		},
 
@@ -317,33 +325,27 @@ export default {
 
 	watch: {
 
-		'$route.name' () {
+		width: {
 
-			this.$nextTick(() => this.calculateGridSize())
+			handler () {
+
+				this.$nextTick(() => this.calculateGridSize())
+
+			},
+
+			immediate: true
 
 		},
-
-		width () {
-
-			this.calculateGridSize()
-
-		}
-
-	},
-
-	beforeUpdate () {
-
-		this.removeActiveDays()
-
-	},
-
-	beforeDestroy () {
-
-		this.removeActiveDays()
 
 	},
 
 	methods: {
+
+		...mapActions({
+
+			selectDate: 'selectDate',
+
+		}),
 
 		calculateGridSize () {
 
@@ -369,17 +371,19 @@ export default {
 
 		},
 
+		checkIfDaySelected (day) {
+
+			if (this.selectedDates.find(d => d == `${day}.${this.params.month}.${this.params.year}`)) return true
+
+			else return false
+
+		},
+
 		onClickDay (e, day) {
 
 			if (this.isPageBirthdays || !this.params.isMain || !day || this.checkIfDayDisabled(day)) return
 
-			e.target.closest('[data-js-day]').classList.toggle('active')
-
-		},
-
-		removeActiveDays () {
-
-			this.els('[data-js-day]').forEach(el => el.classList.remove('active'))
+			this.selectDate({date: `${day}.${this.params.month}.${this.params.year}`})
 
 		},
 
@@ -406,19 +410,18 @@ export default {
 			let el = e.target,
 				hint = e.target.querySelector('[data-js-person-name]'),
 				hintRect = hint?.getBoundingClientRect(),
-				hintStyle = window.getComputedStyle(hint)
+				hintStyle = window.getComputedStyle(hint),
+				extraIndent = this.params.isMain ? 22 : 4
 
 			// тултип выходит за правую границу окна
 			if (window.innerWidth - (hintRect.left + hintRect.width + 20) < 0) {
 
-				hint.style.left = this.hintLeft - hintRect.width + 'px'
+				hint.style.left = this.hintLeft - hintRect.width - extraIndent + 'px'
 
 			} else hint.style.left = this.hintLeft + 'px'
 
 			// тултип выходит за нижнюю границу окна
 			if (hintRect.bottom + 20 > window.innerHeight) {
-
-				let extraIndent = this.params.isMain ? 30 : 10
 
 				hint.style.top = this.hintTop - hintRect.height - extraIndent + 'px'
 
@@ -456,14 +459,13 @@ export default {
 		background-color: transparent
 	
 	&__month-name
-		font-size: 26px
-		line-height: 30px
+		font-size: 20px
+		line-height: 20px
 		color: colorBlack
-		text-transform: uppercase
 		text-align: center
 		
 	&__table
-		margin-top: 12px
+		margin-top: 10px
 		
 	&__weekdays
 		display: grid
@@ -473,7 +475,7 @@ export default {
 		align-self: center
 		justify-self: center
 		font-family: 'Roboto-Light'
-		font-size: 28px
+		font-size: 20px
 		color: colorBlack
 		
 		&:nth-child(6),
@@ -487,7 +489,7 @@ export default {
 	&__day
 		position: relative
 		font-family: 'Roboto-Light'
-		font-size: 28px
+		font-size: 16px
 		color: colorBlack
 		cursor: default
 		
@@ -500,8 +502,8 @@ export default {
 			
 		&-number
 			position: relative
-			top: calc(50% - 14px)
-			text-align: center	
+			top: calc(50% - 12px)
+			text-align: center  
 		
 	// большой календарь
 		
@@ -513,14 +515,11 @@ export default {
 		
 	// маленький календарь
 		
-	&.small &__table
-		padding-top: 7.6%
-		
 	&.small &__weekday
-		font-size: 18px
+		font-size: 12px
 		
 	&.small &__day
-		font-size: 18px
+		font-size: 12px
 		
 	&.small &__day-number
 		top: calc(50% - 9px)
@@ -534,10 +533,10 @@ export default {
 			display: block
 			content: ''
 			position: absolute
-			top: 15px
-			left: 15px
-			width: calc(100% - 30px)
-			height: calc(100% - 30px)
+			top: 6px
+			left: 6px
+			width: calc(100% - 12px)
+			height: calc(100% - 12px)
 			border-radius: 4px
 			
 		&.with-number:not(.disabled):not(.active):hover:before
@@ -549,6 +548,9 @@ export default {
 		&.disabled
 			color: lighten(colorBlack, 70%)
 			cursor: not-allowed
+			
+	&.services.big &__day
+		font-size: 22px
 		
 	&.services.small
 		position: relative
@@ -558,10 +560,10 @@ export default {
 			display: block
 			content: ''
 			position: absolute
-			top: -30px
-			left: -15px
-			width: calc(100% + 30px)
-			height: calc(100% + 45px)
+			top: -12px
+			left: -10px
+			width: calc(100% + 20px)
+			height: calc(100% + 20px)
 			background-color: colorUltraLight
 			border-radius: 4px
 			
@@ -589,18 +591,13 @@ export default {
 		&:first-child
 			border-left: 1px solid colorDark
 	
-		&.with-number	
+		&.with-number 
 			background-color: colorLight
 		
 	// основной контент
 		
 	&.birthdays &__month-name
-		margin-left: 15px
-		font-size: 35px
-		text-align: left	
-		
-	&.birthdays &__table
-		margin-top: 5px
+		text-align: left  
 		
 	&.birthdays &__day
 		
@@ -630,7 +627,8 @@ export default {
 			&-name
 				visibility: hidden
 				position: absolute
-				padding: 6px 10px 5px 9px
+				padding: 4px 8px
+				font-family: 'Roboto'
 				font-size: 16px
 				line-height: 20px
 				color: white
@@ -651,7 +649,7 @@ export default {
 			&-number
 				padding-right: 4px
 				font-family: 'Roboto-Bold'
-				font-size: 52px
+				font-size: 20px
 				color: colorDark
 				text-shadow: 
 					2px 2px 0px white, 
@@ -664,7 +662,8 @@ export default {
 				display: flex
 				flex-direction: column
 				position: absolute
-				padding: 6px 12px 5px 9px
+				padding: 4px 8px
+				font-size: 16px
 				text-align: left
 				background-color: colorDark
 				border-radius: 4px
@@ -672,7 +671,7 @@ export default {
 				
 			&-name
 				font-size: 16px
-				line-height: 24px
+				line-height: 1.4
 				color: white
 				white-space: nowrap
 				
@@ -688,28 +687,21 @@ export default {
 	// большой календарь с ДР
 		
 	&.birthdays.big &__day
-		font-size: 36px
+		font-size: 20px
 		
 	&.birthdays.big &__day-number
-		top: calc(100% - 41px)
-		left: 7px
+		top: calc(100% - 26px)
+		left: 6px
 		text-align: left
 		
 	// маленький календарь с ДР
 		
-	&.birthdays.small &__month-name
-		margin-left: 15px
-		font-size: 26px
-		
-	&.birthdays.small &__table
-		padding-top: 0
-		
 	&.birthdays.small &__day
-		font-size: 19px
+		font-size: 12px
 		
 	&.birthdays.small &__day-number
-		top: calc(100% - 22px)
-		left: 4px
+		top: calc(100% - 14px)
+		left: 2px
 		text-align: left
 		
 	&.birthdays.small &__day-persons-number
@@ -721,10 +713,8 @@ export default {
 			-1px -1px 0px white, 
 			1px -1px 0px white, 
 			-1px 1px 0px white
-		
-	&.birthdays.small &__day-person-name,
-	&.birthdays.small &__day-persons-name
-		font-size: 12px
-		line-height: 16px
+			
+	&.birthdays.small &__day-persons-names
+		font-size: 16px
 
 </style>

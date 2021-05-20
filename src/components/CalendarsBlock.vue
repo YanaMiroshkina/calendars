@@ -35,7 +35,13 @@
 
 			<!-- calendars -->
 
-			<div ref="grid" class="calendars-block__grid">
+			<div 
+				ref="grid" 
+				:style="{
+					'width': (isPageServices ? gridWidthServices : gridWidthBirthdays) + 'px'
+				}"
+				class="calendars-block__grid"
+			>
 
 				<!-- major calendar -->
 
@@ -47,48 +53,6 @@
 						class="calendars-block__calendar"
 						:width="widthBig"
 					/>
-
-					<!-- time block -->
-
-					<div v-if="isPageServices" class="calendars-block__time">
-
-						<div class="calendars-block__time-item">
-
-							<span class="calendars-block__time-item-text">с</span>
-
-							<IconClock class="calendars-block__time-item-icon" />
-						
-							<Select 
-								autocomplete
-								:styling="'flat'" 
-								:bg="'#e0e2ea'" 
-								:items="timeItemsFrom"
-								:disabledItems="disabledTimeItemsFrom"
-								class="calendars-block__time-item-select"
-								@select="onSelectTimeFrom"
-							/>
-
-						</div>
-
-						<div class="calendars-block__time-item">
-
-							<span class="calendars-block__time-item-text">по</span>
-
-							<IconClock class="calendars-block__time-item-icon" />
-						
-							<Select 
-								autocomplete
-								:styling="'flat'" 
-								:bg="'#e0e2ea'"
-								:items="timeItemsTo"
-								:disabledItems="disabledTimeItemsTo"
-								class="calendars-block__time-item-select"
-								@select="onSelectTimeTo"
-							/>
-
-						</div>
-
-					</div>
 
 				</div>
 
@@ -127,8 +91,6 @@
 import { mapGetters } from 'vuex'
 import Calendar from '@/components/Calendar'
 import IconArrowDown from '@/components/svg-icons/arrow-down'
-import IconClock from '@/components/svg-icons/clock'
-import Select from '@/components/controls/Select'
 	
 export default {
 
@@ -138,8 +100,6 @@ export default {
 
 		Calendar,
 		IconArrowDown,
-		IconClock,
-		Select,
 
 	},
 
@@ -159,6 +119,9 @@ export default {
 		let date = new Date()
 
 		return {
+
+			gridWidthBirthdays: 740,
+			gridWidthServices: 700,
 
 			widthBig: 0,
 			widthSmall: 0,
@@ -181,44 +144,6 @@ export default {
 			paramsCalendar1: {},
 			paramsCalendar2: {},
 			paramsCalendar3: {},
-
-			timeItemsFrom: [
-
-				{ value: 8, text: '8:00' },
-				{ value: 9, text: '9:00' },
-				{ value: 10, text: '10:00' },
-				{ value: 11, text: '11:00' },
-				{ value: 12, text: '12:00' },
-				{ value: 13, text: '13:00' },
-				{ value: 14, text: '14:00' },
-				{ value: 15, text: '15:00' },
-				{ value: 16, text: '16:00' },
-				{ value: 17, text: '17:00' },
-				{ value: 18, text: '18:00' },
-				{ value: 19, text: '19:00' },
-
-			],
-
-			timeItemsTo: [
-
-				{ value: 9, text: '9:00' },
-				{ value: 10, text: '10:00' },
-				{ value: 11, text: '11:00' },
-				{ value: 12, text: '12:00' },
-				{ value: 13, text: '13:00' },
-				{ value: 14, text: '14:00' },
-				{ value: 15, text: '15:00' },
-				{ value: 16, text: '16:00' },
-				{ value: 17, text: '17:00' },
-				{ value: 18, text: '18:00' },
-				{ value: 19, text: '19:00' },
-				{ value: 20, text: '20:00' },
-
-			],
-
-			disabledTimeItemsFrom: [],
-
-			disabledTimeItemsTo: [],
 
 		}
 
@@ -259,6 +184,7 @@ export default {
 			handler (name) {
 
 				this.setDate(this.initialMonth, this.initialYear)
+				this.calculateWidth()
 
 			},
 
@@ -271,20 +197,6 @@ export default {
 	created () {
 
 		this.setDate()
-
-	},
-
-	mounted () {
-
-		this.calculateWidth()
-
-		window.addEventListener('resize', this.calculateWidth)
-
-	},
-
-	beforeDestroy () {
-
-		window.removeEventListener('resize', this.calculateWidth)
 
 	},
 
@@ -366,19 +278,18 @@ export default {
 
 		calculateWidth () {
 
-			let width = this.$refs.grid.offsetWidth,
-				part = 0
+			let part = 0
 
 			if (this.isPageBirthdays) {
 
-				part = width / 23.2
+				part = this.gridWidthBirthdays / 23.4
 
 				this.widthBig = part * 7 * 2.25 ^ 0
 				this.widthSmall = part * 7 ^ 0
 
 			} else if (this.isPageServices) {
 
-				part = width / 24.4
+				part = this.gridWidthServices / 24.4
 
 				this.widthBig = part * 7 * 2.2 ^ 0
 				this.widthSmall = part * 7 ^ 0
@@ -420,38 +331,6 @@ export default {
 			this.setDate(month, year)
 
 		},
-
-		onSelectTimeFrom (timeFrom) {
-
-			let fromValue = timeFrom.value
-
-			this.disabledTimeItemsTo = []
-
-			if (!fromValue) return
-
-			this.timeItemsTo.forEach(item => {
-
-				if (item.value <= fromValue) this.disabledTimeItemsTo.push(item)
-
-			})
-
-		},
-
-		onSelectTimeTo (timeTo) {
-
-			let toValue = timeTo.value
-
-			this.disabledTimeItemsFrom = []
-
-			if (!toValue) return
-
-			this.timeItemsFrom.forEach(item => {
-
-				if (item.value >= toValue) this.disabledTimeItemsFrom.push(item)
-
-			})
-
-		},
 		
 	}
 
@@ -463,11 +342,16 @@ export default {
 	
 .calendars-block
 	
+	&.services
+		margin-top: 40px
+		
+	&.birthdays
+		margin-top: 60px
+	
 	&__title
-		margin-top: 50px
-		margin-bottom: 50px
+		margin-bottom: 32px
 		font-family: 'Roboto-Light'
-		font-size: 40px
+		font-size: 32px
 		color: colorBlack
 		text-align: center
 	
@@ -482,7 +366,6 @@ export default {
 		font-size: 26px
 		line-height: 30px
 		color: colorBlack
-		text-transform: uppercase
 		text-align: center
 		
 	&__arrow
@@ -490,7 +373,7 @@ export default {
 		align-items: center
 		justify-content: center
 		position: absolute
-		top: 362px
+		top: 200px
 		top: 50%
 		width: 50px
 		height: 50px
@@ -502,18 +385,16 @@ export default {
 		&.disabled
 			cursor: not-allowed
 			
-			path, line
+			path, 
+			line
 				stroke: lighten(colorBlack, 80%)!important
 		
-		&:hover:not(.disabled) path
-			fill: #AFAFAF!important
-		
 		&.left
-			left: 1.5vw
+			right: calc(100% - 280px)
 			transform: translateY(-50%) rotate(90deg)
 			
 		&.right
-			right: 1.5vw
+			left: calc(100% - 280px)
 			transform: translateY(-50%) rotate(-90deg)
 	
 	&__grid
@@ -521,10 +402,7 @@ export default {
 		flex-direction: row
 		justify-content: space-around
 		position: relative
-		margin: 23px auto 0
-		padding-right: 2.4%
-		width: 100%
-		max-width: 1200px
+		margin: 0 auto
 		
 	&__subgrid
 			
@@ -536,46 +414,9 @@ export default {
 			display: flex
 			flex-direction: column
 			justify-content: space-between
-	
-	&__subgrid:first-child &__calendar
-		min-height: 700px
 
 	&__subgrid:nth-child(2) &__calendar:nth-child(2)
 		margin-top: 12%
-		
-		.calendar__table
-			padding-top: 6%
-			
-	&__time
-		display: flex
-		justify-content: space-between
-		margin-top: 30px
-		margin-bottom: 1.45%
-		padding: 0 4.5% 0 5.2%
-		
-		&-item
-			display: flex
-			align-items: flex-end
-			font-family: 'Roboto-Light'
-			font-size: 26px
-			color: colorBlack
-			text-transform: uppercase
-			
-			&-text
-				position: relative
-				top: -5px
-				margin-right: 25px
-			
-			&-icon
-				position: relative
-				margin-right: 30px
-				
-			&-select
-				width: 164px
-				height: 57px
-				
-				.select__arrow
-					top: 3px
 
 	// календари дней рождений
 		
@@ -583,29 +424,19 @@ export default {
 		display: flex
 		flex-direction: row
 		justify-content: space-between
-		margin: 23px 5.5% 0
-		padding-right: 0
 			
 	&.birthdays &__subgrid:first-child
 		display: flex
 		flex-direction: column
-		padding: 0
 		width: auto
-		
-	&.birthdays &__subgrid:first-child &__calendar
-		min-height: auto
 			
 	&.birthdays &__subgrid:nth-child(2)
 		display: flex
 		flex-direction: column
 		justify-content: space-between
-		padding: 0 0 0 27px
 		width: auto
 		
 	&.birthdays &__subgrid:nth-child(2) &__calendar:nth-child(2)
 		margin-top: 0
-		
-		.calendar__table
-			padding-top: 0
 
 </style>

@@ -18,7 +18,7 @@
 			<div class="nav">
 				<div class="nav__title">Выберите календарь:</div>
 				<router-link class="nav__link" to="/birthdays">Дни рождения</router-link>
-				<router-link class="nav__link" to="/services">Сервисы</router-link>
+				<router-link class="nav__link" to="/services">Бронирование дат</router-link>
 			</div>
 
 			<router-view />
